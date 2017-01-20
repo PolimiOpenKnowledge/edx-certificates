@@ -13,6 +13,7 @@ import shutil
 import sys
 
 from gen_cert import CertificateGen, S3_CERT_PATH, TARGET_FILENAME, TMP_GEN_DIR
+from gen_pok_cert import PokCertificateGen
 import settings
 from tests.test_data import NAMES
 
@@ -107,7 +108,7 @@ def main():
             name_list = NAMES
 
         for name in name_list:
-            cert = CertificateGen(
+            cert = PokCertificateGen(
                 course,
                 args.template_file,
                 aws_id=settings.CERT_AWS_ID,

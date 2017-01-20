@@ -7,6 +7,7 @@ import time
 import settings
 from openedx_certificates.queue_xqueue import XQueuePullManager
 from gen_cert import CertificateGen
+from gen_pok_cert import PokCertificateGen
 
 logging.config.dictConfig(settings.LOGGING)
 log = logging.getLogger('certificates: ' + __name__)
@@ -93,7 +94,7 @@ def main():
             issued_date = xqueue_body.get('issued_date', None)
             designation = xqueue_body.get('designation', None)
             if last_course != course_id:
-                cert = CertificateGen(
+                cert = PokCertificateGen(
                     course_id,
                     template_pdf,
                     aws_id=args.aws_id,
