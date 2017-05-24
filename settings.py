@@ -138,8 +138,6 @@ if os.path.isfile(ENV_ROOT / "auth.json"):
 # Use the custom CERT_PRIVATE_DIR for paths to the
 # template sub directory and the cert data config
 
-# print 'Cert_Private_Dir ' + str( CERT_PRIVATE_DIR)
-
 
 TEMPLATE_DIR = os.path.join(CERT_PRIVATE_DIR, TEMPLATE_DATA_SUBDIR)
 
