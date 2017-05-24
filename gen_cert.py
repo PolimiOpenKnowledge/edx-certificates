@@ -64,13 +64,13 @@ l.setLevel('WARNING')
 #
 # While registering fonts, build a table of the Unicode code points in each
 # for use in font_for_string().
-FONT_CHARACTER_TABLES = {}
+"""FONT_CHARACTER_TABLES = {}
 for font_file in glob('{0}/fonts/*.ttf'.format(TEMPLATE_DIR)):
     font_name = os.path.basename(os.path.splitext(font_file)[0])
     ttf = TTFont(font_name, font_file)
     FONT_CHARACTER_TABLES[font_name] = ttf.face.charToGlyph.keys()
     pdfmetrics.registerFont(TTFont(font_name, font_file))
-
+"""
 # These are small, so let's just load them at import time and keep them around
 # so we don't have to keep doing the file I/o
 BLANK_PDFS = {
@@ -337,6 +337,8 @@ class CertificateGen(object):
                             else:
                                 log.info("uploaded {local} to {s3path}".format(local=local_path, s3path=dest_path))
 
+
+
                         if copy_to_webroot:
                             try:
                                 dirname = os.path.dirname(publish_dest)
@@ -347,6 +349,7 @@ class CertificateGen(object):
                                 raise
                             else:
                                 log.info("published {local} to {web}".format(local=local_path, web=publish_dest))
+				log.info("versionmap choosen: {vm}".format(vm=self.template_version))
 
         if cleanup:
             for working_dir in (certificates_path, verify_path):
@@ -424,7 +427,8 @@ class CertificateGen(object):
         styleArial = ParagraphStyle(name="arial", leading=10, fontName='Arial Unicode')
         styleOpenSans = ParagraphStyle(name="opensans-regular", leading=10, fontName='OpenSans-Regular')
         styleOpenSansLight = ParagraphStyle(name="opensans-light", leading=10, fontName='OpenSans-Light')
-
+	#styleTreb = ParagraphStyle(name="trebuchet-ms", leading=10, fontName='Trebuchet MS')
+       
         # Text is overlayed top to bottom
         #   * Issued date (top right corner)
         #   * "This is to certify that"

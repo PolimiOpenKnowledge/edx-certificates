@@ -112,7 +112,7 @@ if os.path.isfile(ENV_ROOT / "env.json"):
                                 dev_env=LOGGING_DEV_ENV,
                                 service_variant=os.environ.get('SERVICE_VARIANT', None))
     CERT_PRIVATE_DIR = ENV_TOKENS.get('CERT_PRIVATE_DIR', CERT_PRIVATE_DIR)
-
+  
 # This is the base URL used for logging CERT uploads to s3
 CERT_URL = CERT_URL or 'http://{}.s3.amazonaws.com'.format(CERT_BUCKET)
 # This is the base URL that will be displayed to the user in the dashboard
@@ -138,7 +138,11 @@ if os.path.isfile(ENV_ROOT / "auth.json"):
 # Use the custom CERT_PRIVATE_DIR for paths to the
 # template sub directory and the cert data config
 
+# print 'Cert_Private_Dir ' + str( CERT_PRIVATE_DIR)
+
+
 TEMPLATE_DIR = os.path.join(CERT_PRIVATE_DIR, TEMPLATE_DATA_SUBDIR)
+
 
 with open(os.path.join(CERT_PRIVATE_DIR, CERT_DATA_FILE)) as f:
     CERT_DATA = yaml.load(f.read().decode("utf-8"))

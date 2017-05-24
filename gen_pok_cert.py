@@ -117,42 +117,31 @@ class PokCertificateGen(CertificateGen):
         overlay_pdf_buffer = StringIO.StringIO()
         c = canvas.Canvas(overlay_pdf_buffer)
         c.setPageSize((297 * mm, 210 * mm))
-
+        
         # register all fonts in the fonts/ dir,
         # there are more fonts in here than we need
         # but the performance hit seems minimal
+       
+        FONT_CHARACTER_TABLES = {}
+        
+        for font_file in glob('{0}/fonts/*.ttf'.format(TEMPLATE_DIR)):
 
-        # for font_file in glob('{0}/fonts/*.ttf'.format(self.template_dir)):
-        #    font_name = os.path.basename(os.path.splitext(font_file)[0])
-        #    pdfmetrics.registerFont(TTFont(font_name, font_file))
+           font_name = os.path.basename(os.path.splitext(font_file)[0])
+           pdfmetrics.registerFont(TTFont(font_name, font_file))
 
-        # 0 0 - normal
-        # 0 1 - italic
-        # 1 0 - bold
-        # 1 1 - italic and bold
 
-        addMapping('OpenSans-Light', 0, 0, 'OpenSans-Light')
-        addMapping('OpenSans-Light', 0, 1, 'OpenSans-LightItalic')
-        addMapping('OpenSans-Light', 1, 0, 'OpenSans-Bold')
-
-        addMapping('OpenSans-Regular', 0, 0, 'OpenSans-Regular')
-        addMapping('OpenSans-Regular', 0, 1, 'OpenSans-Italic')
-        addMapping('OpenSans-Regular', 1, 0, 'OpenSans-Bold')
-        addMapping('OpenSans-Regular', 1, 1, 'OpenSans-BoldItalic')
-
-        styleArial = ParagraphStyle(
-           name="arial", leading=10,
-           fontName='Arial Unicode'
-        )
-        styleOpenSans = ParagraphStyle(
-           name="opensans-regular", leading=10,
-           fontName='OpenSans-Regular'
-        )
-        styleOpenSansLight = ParagraphStyle(
-           name="opensans-light", leading=10,
-           fontName='OpenSans-Light'
+        styleTrebBold = ParagraphStyle(
+           name="trebuchetB", leading=10,
+           fontName='Trebuchet-Bold'
         )
 
+        styleTrebRegular = ParagraphStyle(
+           name="trebuchetR", leading=10,
+           fontName='Trebuchet-Regular'
+        )
+
+       
+       
         # Text is overlayed top to bottom
         #   * Issued date (top right corner)
         #   * "This is to certify that"
@@ -165,149 +154,83 @@ class PokCertificateGen(CertificateGen):
         HEIGHT = 210  # hight in mm (A4)
 
         LEFT_INDENT = 49  # mm from the left side to write the text
-        RIGHT_INDENT = 49  # mm from the right side for the CERTIFICATE
+        RIGHT_INDENT = 20  # mm from the right side for the CERTIFICATE
 
-        # CERTIFICATE
-
-        styleOpenSansLight.fontSize = 19
-        styleOpenSansLight.leading = 10
-        styleOpenSansLight.textColor = colors.Color(
-           0.302, 0.306, 0.318)
-        styleOpenSansLight.alignment = TA_LEFT
-
-        paragraph_string = "CERTIFICATE" if cert_language == 'EN' else "ATTESTATO DI PARTECIPAZIONE"
-
-        # Right justified so we compute the width
-        width = stringWidth(
-           paragraph_string,
-           'OpenSans-Light', 19) / mm
-        paragraph = Paragraph("{0}".format(
-           paragraph_string), styleOpenSansLight)
-        paragraph.wrapOn(c, WIDTH * mm, HEIGHT * mm)
-        paragraph.drawOn(c, (WIDTH - RIGHT_INDENT - width) * mm, 180 * mm)   # 180 con small, 200 con big
-        # Issued ..
-
-        styleOpenSansLight.fontSize = 12
-        styleOpenSansLight.leading = 10
-        styleOpenSansLight.textColor = colors.Color(
-           0.302, 0.306, 0.318)
-        styleOpenSansLight.alignment = TA_LEFT
-
-        paragraph_string = "{0}".format(self.issued_date)
-
-        # Right justified so we compute the width
-        width = stringWidth(
-           paragraph_string,
-           'OpenSans-LightItalic', 12) / mm
-        paragraph = Paragraph("<i>{0}</i>".format(
-           paragraph_string), styleOpenSansLight)
-        paragraph.wrapOn(c, WIDTH * mm, HEIGHT * mm)
-        paragraph.drawOn(c, (WIDTH - RIGHT_INDENT - width) * mm, 170 * mm)  # 170 con small, 190 con big
-
-        # This is to certify..
-
-        styleOpenSansLight.fontSize = 12
-        styleOpenSansLight.leading = 10
-        styleOpenSansLight.textColor = colors.Color(
-           0.302, 0.306, 0.318)
-        styleOpenSansLight.alignment = TA_LEFT
-
-        paragraph_string = "This is to certify that" if cert_language == 'EN' else "Si attesta che"
-        paragraph = Paragraph(paragraph_string, styleOpenSansLight)
-        paragraph.wrapOn(c, WIDTH * mm, HEIGHT * mm)
-        paragraph.drawOn(c, LEFT_INDENT * mm, 132.5 * mm)
 
         #  Student name
 
         # default is to use the DejaVu font for the name,
         # will fall back to Arial if there are
         # unusual characters
-        style = styleOpenSans
-        style.leading = 10
-        width = stringWidth(
-           student_name.decode('utf-8'),
-           'OpenSans-Bold', 34) / mm
-        paragraph_string = "<b>{0}</b>".format(student_name)
+        style = styleTrebBold
+        style.leading = 20
+        style.fontSize = 18
 
-        if self._use_unicode_font(student_name):
-            style = styleArial
-            width = stringWidth(student_name.decode('utf-8'),
-                                'Arial Unicode', 34) / mm
-            # There is no bold styling for Arial :(
-            paragraph_string = "{0}".format(student_name)
 
-        # We will wrap at 200mm in, so if we reach the end (200-47)
-        # decrease the font size
-        if width > 153:
-            style.fontSize = 18
-            nameYOffset = 121.5
-        else:
-            style.fontSize = 34
-            nameYOffset = 124.5
+        len_name = len(student_name)
 
         style.textColor = colors.Color(
-           0, 0.624, 0.886)
+           0, 0.674, 0.843)
         style.alignment = TA_LEFT
 
+        paragraph_string = u"{0}".format(
+           student_name.decode('utf-8'))
         paragraph = Paragraph(paragraph_string, style)
-        paragraph.wrapOn(c, 200 * mm, 214 * mm)
-        paragraph.drawOn(c, LEFT_INDENT * mm, nameYOffset * mm)
 
-        # Successfully completed
-
-        styleOpenSansLight.fontSize = 12
-        styleOpenSansLight.leading = 10
-        styleOpenSansLight.textColor = colors.Color(
-           0.302, 0.306, 0.318)
-        styleOpenSansLight.alignment = TA_LEFT
-
-        paragraph_string = ""
-        if cert_language == 'EN':
-            paragraph_string = "successfully completed the course:"
+        if len_name > 50: #va a capo
+            paragraph.wrapOn(c, 181 * mm, 150 * mm)
+            paragraph.drawOn(c, 109 * mm, 125 * mm)
         else:
-            paragraph_string = "ha partecipato con successo al corso:"
+            paragraph.wrapOn(c, (WIDTH - RIGHT_INDENT) * mm, HEIGHT * mm)
+            paragraph.drawOn(c, 109 * mm, 129 * mm)
 
-        paragraph = Paragraph(paragraph_string, styleOpenSansLight)
 
-        paragraph.wrapOn(c, WIDTH * mm, HEIGHT * mm)
-        paragraph.drawOn(c, LEFT_INDENT * mm, 108 * mm)
 
         # Course name
         len_name = len(self.long_course)
+        style.fontSize = 18
+        
+        style.textColor = colors.Color(
+           0, 0.674, 0.843)
+        style.alignment = TA_LEFT
 
-        # styleOpenSans.fontName = 'OpenSans-BoldItalic'
-        if len_name > 50:
-            styleOpenSans.fontSize = 24
-            styleOpenSans.leading = 21
-        else:
-            styleOpenSans.fontSize = 24
-            styleOpenSans.leading = 10
-        styleOpenSans.textColor = colors.Color(
-           0, 0.624, 0.886)
-        styleOpenSans.alignment = TA_LEFT
-
-        paragraph_string = u"<b><i>{0}</i></b>".format(
+        paragraph_string = "{0}".format(
            self.long_course.decode('utf-8'))
-        # "<b><i>{0}: {1}</i></b>".format(self.course, self.long_course)
-        paragraph = Paragraph(paragraph_string, styleOpenSans)
-        # paragraph.wrapOn(c, WIDTH * mm, HEIGHT * mm)
+        paragraph = Paragraph(paragraph_string, style)
+
         if len_name > 50:
-            paragraph.wrapOn(c, 200 * mm, HEIGHT * mm)
-            paragraph.drawOn(c, LEFT_INDENT * mm, 88 * mm)
+            paragraph.wrapOn(c, 181 * mm, 150 * mm)
+            paragraph.drawOn(c, 109 * mm, 105 * mm)
         else:
-            paragraph.wrapOn(c, WIDTH * mm, HEIGHT * mm)
-            paragraph.drawOn(c, LEFT_INDENT * mm, 99 * mm)
+            paragraph.wrapOn(c, (WIDTH - RIGHT_INDENT) * mm, HEIGHT * mm)
+            paragraph.drawOn(c, 109 * mm, 111 * mm)
+
+
+        # issue date
+        style = styleTrebRegular
+        style.fontSize = 9
+        style.leading = 10
+        style.textColor = colors.Color(
+           0.345, 0.341, 0.329)
+        style.alignment = TA_LEFT
+
+        paragraph_string = "{0}".format(self.issued_date)
+        paragraph = Paragraph("{0}".format(
+        paragraph_string), style)
+        paragraph.wrapOn(c, WIDTH * mm, HEIGHT * mm)
+        paragraph.drawOn(c, 109 * mm, 78 * mm)
+
+        
 
         # Honor code
+        #style = styleTrebBold
+        style.fontSize = 7
+        style.leading = 10
+        style.textColor = colors.Color(
+           0.345, 0.341, 0.329)
+        style.alignment = TA_LEFT
 
-        styleOpenSansLight.fontSize = 7
-        styleOpenSansLight.leading = 10
-        styleOpenSansLight.textColor = colors.Color(
-           0.302, 0.306, 0.318)
-        styleOpenSansLight.alignment = TA_CENTER
-
-        paragraph_string = "HONOR CODE CERTIFICATE<br/>" \
-                           "*Authenticity of this certificate can be verified at " \
+        paragraph_string = "Authenticity of this certificate can be verified at " \
                            "<a href='{verify_url}/{verify_path}/{verify_uuid}'>" \
                            "{verify_url}/{verify_path}/{verify_uuid}</a>"
 
@@ -316,10 +239,13 @@ class PokCertificateGen(CertificateGen):
            verify_path=S3_VERIFY_PATH,
            verify_uuid=verify_uuid
         )
-        paragraph = Paragraph(paragraph_string, styleOpenSansLight)
+        paragraph = Paragraph(paragraph_string, style)
 
         paragraph.wrapOn(c, WIDTH * mm, HEIGHT * mm)
-        paragraph.drawOn(c, 0 * mm, 24 * mm)   # 24 con template small , 5 con big
+        paragraph.drawOn(c, 109 * mm, 25 * mm)  
+
+        
+
 
         ########
 
