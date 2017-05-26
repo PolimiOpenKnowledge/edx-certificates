@@ -154,7 +154,7 @@ class PokCertificateGen(CertificateGen):
         HEIGHT = 210  # hight in mm (A4)
 
         LEFT_INDENT = 49  # mm from the left side to write the text
-        RIGHT_INDENT = 20  # mm from the right side for the CERTIFICATE
+        RIGHT_INDENT = 40  # mm from the right side for the CERTIFICATE
 
 
         #  Student name
@@ -198,7 +198,7 @@ class PokCertificateGen(CertificateGen):
            self.long_course.decode('utf-8'))
         paragraph = Paragraph(paragraph_string, style)
 
-        if len_name > 50:
+        if len_name > 60:
             paragraph.wrapOn(c, 181 * mm, 150 * mm)
             paragraph.drawOn(c, 109 * mm, 105 * mm)
         else:
