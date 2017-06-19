@@ -178,10 +178,10 @@ class PokCertificateGen(CertificateGen):
 
         if len_name > 59: #va a capo
             paragraph.wrapOn(c, 181 * mm, 150 * mm)
-            paragraph.drawOn(c, 109 * mm, 125 * mm)
+            paragraph.drawOn(c, 110 * mm, 125 * mm)
         else:
             paragraph.wrapOn(c, (WIDTH - RIGHT_INDENT) * mm, HEIGHT * mm)
-            paragraph.drawOn(c, 109 * mm, 129 * mm)
+            paragraph.drawOn(c, 110 * mm, 131 * mm)
 
 
 
@@ -199,10 +199,10 @@ class PokCertificateGen(CertificateGen):
 
         if len_name > 59: #va a capo
             paragraph.wrapOn(c, 181 * mm, 150 * mm)
-            paragraph.drawOn(c, 109 * mm, 105 * mm)
+            paragraph.drawOn(c, 110 * mm, 106 * mm)
         else:
             paragraph.wrapOn(c, (WIDTH - RIGHT_INDENT) * mm, HEIGHT * mm)
-            paragraph.drawOn(c, 109 * mm, 111 * mm)
+            paragraph.drawOn(c, 110 * mm, 113 * mm)
 
 
         # issue date
@@ -217,7 +217,7 @@ class PokCertificateGen(CertificateGen):
         paragraph = Paragraph("{0}".format(
         paragraph_string), style)
         paragraph.wrapOn(c, WIDTH * mm, HEIGHT * mm)
-        paragraph.drawOn(c, 109 * mm, 78 * mm)
+        paragraph.drawOn(c, 110 * mm, 78 * mm)
 
         
 
@@ -241,7 +241,7 @@ class PokCertificateGen(CertificateGen):
         paragraph = Paragraph(paragraph_string, style)
 
         paragraph.wrapOn(c, WIDTH * mm, HEIGHT * mm)
-        paragraph.drawOn(c, 109 * mm, 25 * mm)  
+        paragraph.drawOn(c, 110 * mm, 27 * mm)  
 
         
 
