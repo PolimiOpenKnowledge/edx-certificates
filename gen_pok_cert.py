@@ -197,7 +197,7 @@ class PokCertificateGen(CertificateGen):
            self.long_course.decode('utf-8'))
         paragraph = Paragraph(paragraph_string, style)
 
-        if len_name > 59: #va a capo
+        if len_name > 61: #va a capo
             paragraph.wrapOn(c, 181 * mm, 150 * mm)
             paragraph.drawOn(c, 110 * mm, 106 * mm)
         else:
