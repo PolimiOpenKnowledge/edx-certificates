@@ -193,7 +193,7 @@ class PokCertificateGen(CertificateGen):
            0, 0.674, 0.843)
         style.alignment = TA_LEFT
 
-        paragraph_string = "{0}".format(
+        paragraph_string = u"{0}".format(
            self.long_course.decode('utf-8'))
         paragraph = Paragraph(paragraph_string, style)
 
