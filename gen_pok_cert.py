@@ -220,6 +220,7 @@ class PokCertificateGen(CertificateGen):
             locale.setlocale(locale.LC_ALL, "it_IT.utf8")
             paragraph_string = "Milano, {:%d %B %Y}".format(today)
         else: #english_date
+            locale.setlocale(locale.LC_ALL, "en_GB.utf8")
             paragraph_string = "Milan, {:%d %B %Y}".format(today)
         
         #paragraph_string = "{0}".format(self.issued_date)
